@@ -3,8 +3,8 @@ package protocol;
 public enum PacketTypes {
 
     /* Message types */
-    CONNECT(1),
-    CONNACK(2),
+    CONNECT     (1),
+    CONNACK     (2),
     PUBLISH     (3),
     PUBACK      (4),
     PUBREC      (5),

@@ -18,6 +18,4 @@ public class ControlPacketTypes {
     final int SUBACK_BYTE =    0x90;
     final int UNSUBACK_BYTE =  0xB0;
     final int PINGRESP_BYTE =  0xD0;
-
-
 }
