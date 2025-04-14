@@ -1,6 +1,6 @@
 package protocol;
 
 public class MqttHeader {
-    char bytes;
-    Bits bits;
+    private char bytes;
+    private Bits bits;
 }
