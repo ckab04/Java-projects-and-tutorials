@@ -1,1 +1,28 @@
-<p>product-list works!</p>
+<div class="overflow-hidden rounded-lg flex">
+  <table class="w-[80%] mx-auto bg-white border border-gray-200 text-justify">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="py-2 px-4 border-b"></th>
+        <th class="py-2 px-4 border-b">Name</th>
+        <th class="py-2 px-4 border-b">Price</th>
+        <th class="py-2 px-4 border-b">Units in stock</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (productItem of products; track productItem) {
+        <tr class="hover:bg-gray-50">
+          <td class="py-2 px-4 border-b">
+            <img src="{{ productItem.imageUrl }}" class="h-14 my-2" />
+          </td>
+          <td class="py-2 px-4 border-b">{{ productItem.name }}</td>
+          <td class="py-2 px-4 border-b">
+            {{ productItem.unitPrice | currency: "USD" }}
+          </td>
+          <td class="py-2 px-4 border-b">
+            {{ productItem.unitsInStock }}
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
