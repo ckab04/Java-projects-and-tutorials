@@ -4,6 +4,8 @@ import { Product } from "../../common/product";
 import { CommonModule } from "@angular/common";
 import { ActivatedRoute, Router } from "@angular/router";
 
+import { map } from "rxjs/operators";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 @Component({
   selector: "app-product-list",
   standalone: true,
@@ -20,27 +22,61 @@ export class ProductListComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
   ) {
-    this.router.events.subscribe((event) => console.log(event));
+    //this.router.events.subscribe((event) => console.log(event));
+    this.route.params
+      .pipe(
+        takeUntilDestroyed(),
+        map((params) => {
+          // Explicitly type the params object
+          const typedParams = params as { id?: string };
+          return typedParams.id ? +typedParams.id : 0;
+        }),
+      )
+      .subscribe((categoryId) => {
+        this.currentCategoryId = categoryId;
+        this.listProducts();
+      });
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(() => {
-      this.listProducts();
-    });
+    //this.route.paramMap.subscribe(() => {
+    // this.listProducts();
+    //});
+    //
+    // Subscribe FIRST, then call listProducts() WHEN params change
+    // this.route.paramMap.pipe(takeUntilDestroyed()).subscribe({
+    //   next: (params) => {
+    //     this.currentCategoryId = params["id"] ? +params["id"] : 0;
+    //     this.listProducts(); // Call AFTER params are set
+    //   },
+    //   error: (err) => console.error("Route error:", err),
+    // });
     //this.listProducts();
   }
 
   listProducts() {
     // check if "id" parameter is available
     const hasCategoryId: boolean = this.route.snapshot.paramMap.has("id");
-    this.route.paramMap.subscribe((params) => {
-      const id = params.get("id");
-      if (id) {
-        this.currentCategoryId = +id;
-        console.log("Category ID: ", this.currentCategoryId);
-      } else {
-        this.currentCategoryId = 2;
-      }
+
+    console.log("Full URL:", window.location.href);
+    console.log("Route Snapshot:", this.route.snapshot);
+    console.log("ParamMap contents:", this.route.snapshot.paramMap);
+
+    this.route.paramMap.subscribe({
+      next: (params) => {
+        console.log("All params:", params);
+        const id = params.get("id");
+        console.log("Raw id value:", id, "Type:", typeof id);
+        if (id) {
+          console.log("INSIDE IF");
+          this.currentCategoryId = +id;
+          console.log("Category ID: ", this.currentCategoryId);
+        } else {
+          console.log("INSIDE ELSE - no id parameter found");
+          this.currentCategoryId = 0;
+        }
+      },
+      error: (err) => console.error("Route param error: ", err),
     });
 
     // if (hasCategoryId) {
@@ -50,7 +86,7 @@ export class ProductListComponent implements OnInit {
     // } else {
     //   this.currentCategoryId = 1;
     // }
-
+    console.log("id value = ", this.currentCategoryId);
     this.productService
       .getProductList(this.currentCategoryId)
       .subscribe((data) => {
