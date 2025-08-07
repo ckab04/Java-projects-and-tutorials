@@ -4,8 +4,6 @@ import { Product } from "../../common/product";
 import { CommonModule } from "@angular/common";
 import { ActivatedRoute, Router, NavigationEnd } from "@angular/router";
 
-import { map, filter } from "rxjs/operators";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 @Component({
   selector: "app-product-list",
   standalone: true,
@@ -33,7 +31,6 @@ export class ProductListComponent implements OnInit {
     const hasCategoryId: boolean = this.route.snapshot.paramMap.has("id");
 
     if (hasCategoryId) {
-      console.log("Are you coming herE ?");
       this.currentCategoryId = +this.route.snapshot.paramMap.get("id")!;
     } else {
       this.currentCategoryId = 0;
@@ -43,7 +40,6 @@ export class ProductListComponent implements OnInit {
       .getProductList(this.currentCategoryId)
       .subscribe((data) => {
         this.products = data;
-        console.log("Data ", this.products);
       });
   }
 }
