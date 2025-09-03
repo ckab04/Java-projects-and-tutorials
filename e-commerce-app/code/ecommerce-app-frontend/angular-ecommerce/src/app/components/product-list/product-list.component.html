@@ -39,7 +39,10 @@
 
         @for (tempProduct of products; track tempProduct) {
           <div class="col-md-3">
-            <div class="product-box">
+            <div
+              class="product-box"
+              routerLink="/products/{{ tempProduct.name }}"
+            >
               <img src="{{ tempProduct.imageUrl }}" class="img-responsive" />
               <h1>{{ tempProduct.name }}</h1>
               <div class="price">

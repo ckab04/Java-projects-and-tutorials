@@ -41,6 +41,13 @@ export class ProductService {
       .get<GetResponseProducts>(searchUrl)
       .pipe(map((response) => response._embedded.products));
   }
+
+  getProductDetails(productName: string): Observable<Product> {
+    const productUrl = `${this.baseUrl}/search//findByName?product-name=${productName}`;
+    return this.httpClient
+      .get<GetResponseProduct>(productUrl)
+      .pipe(map((data) => data._embedded.product));
+  }
 }
 
 interface GetResponseProducts {
@@ -52,5 +59,11 @@ interface GetResponseProducts {
 interface GetResponseProductCategory {
   _embedded: {
     productCategory: ProductCategory[];
+  };
+}
+
+interface GetResponseProduct {
+  _embedded: {
+    product: Product;
   };
 }
