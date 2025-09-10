@@ -1,13 +1,18 @@
 import { Component, OnInit } from "@angular/core";
 import { ProductService } from "../../services/product.service";
 import { Product } from "../../common/product";
-import { ActivatedRoute, Router } from "@angular/router";
+import {
+  ActivatedRoute,
+  Router,
+  RouterLink,
+  RouterOutlet,
+} from "@angular/router";
 import { CommonModule } from "@angular/common";
 
 @Component({
   selector: "app-product-details",
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: "./product-details.component.html",
   styleUrl: "./product-details.component.css",
 })
