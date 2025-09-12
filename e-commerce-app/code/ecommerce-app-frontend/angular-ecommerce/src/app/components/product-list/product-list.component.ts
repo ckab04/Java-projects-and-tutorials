@@ -19,8 +19,14 @@ import {
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
   currentCategoryId: number = 1;
+  previousCategoryid: number = 1;
+
   searchMode: boolean = false;
 
+  // properties for pagination
+  thePageNumber: number = 1;
+  thePageSize: number = 20;
+  theTotalElements: number = 0;
   constructor(
     private productService: ProductService,
     private route: ActivatedRoute,
@@ -58,10 +64,26 @@ export class ProductListComponent implements OnInit {
       this.currentCategoryId = 1;
     }
 
+    if (this.previousCategoryid != this.currentCategoryId) {
+      this.thePageNumber = 1;
+    }
+
+    this.previousCategoryid = this.currentCategoryId;
+    console.log(
+      `CurrentCategoryId=${this.currentCategoryId}, thePageNumber = ${this.thePageNumber} `,
+    );
+
     this.productService
-      .getProductList(this.currentCategoryId)
+      .getProductListPaginate(
+        this.thePageNumber - 1,
+        this.thePageSize,
+        this.currentCategoryId,
+      )
       .subscribe((data) => {
-        this.products = data;
+        this.products = data._embedded.products;
+        this.thePageNumber = data.page.number + 1;
+        this.thePageSize = data.page.size;
+        this.theTotalElements = data.page.totalElements;
       });
   }
 
