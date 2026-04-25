@@ -22,9 +22,7 @@ public class ProblemsInYourToDoList {
                     .filter(p -> p >= 1000)
                     .count();
             System.out.println(count);
-
         }
-
     }
 
 
