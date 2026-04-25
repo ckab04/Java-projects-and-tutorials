@@ -14,29 +14,17 @@ public class AirConditionerTemperature {
         Scanner sc = new Scanner(System.in);
         int numTest = sc.nextInt();
         int [] temperatures = new int[3];
-
         while (numTest-- > 0) {
             temperatures[0] = sc.nextInt();
             temperatures[1] = sc.nextInt();
             temperatures[2] = sc.nextInt();
 
-            int higherBound = Arrays.stream(temperatures)
-                    .max().getAsInt();
-
-            int lowerBound = Arrays.stream(temperatures)
-                    .min().getAsInt();
-
-            List<Integer> overlapping = IntStream.rangeClosed(lowerBound, higherBound)
-                    .filter(t -> t >= temperatures[0])
-                    .filter(t -> t <= temperatures[1])
-                    .filter(t -> t >= temperatures[2])
-                    .boxed()
-                    .toList();
-
-            if(overlapping.isEmpty()){
-                System.out.println("No");
-            }else{
+            int lower = Math.max(temperatures[0], temperatures[2]);
+            int upper = temperatures[1];
+            if(lower <= upper){
                 System.out.println("Yes");
+            }else{
+                System.out.println("No");
             }
         }
     }
