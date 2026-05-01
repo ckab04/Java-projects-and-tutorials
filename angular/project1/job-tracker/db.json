@@ -1,0 +1,28 @@
+{
+  "applications": [
+    {
+      "id": "1",
+      "company": "Acme Corp",
+      "role": "Frontend Engineer",
+      "status": "applied",
+      "appliedAt": "2026-04-20T10:00:00.000Z",
+      "lastUpdated": "2026-04-20T10:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "company": "Globex",
+      "role": "Angular Developer",
+      "status": "interview",
+      "appliedAt": "2026-04-15T09:00:00.000Z",
+      "lastUpdated": "2026-04-28T16:30:00.000Z"
+    },
+    {
+      "id": "3",
+      "company": "Initech",
+      "role": "Full-stack Engineer",
+      "status": "rejected",
+      "appliedAt": "2026-03-01T08:00:00.000Z",
+      "lastUpdated": "2026-03-20T12:00:00.000Z"
+    }
+  ]
+}
