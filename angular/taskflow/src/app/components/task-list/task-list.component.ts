@@ -72,20 +72,24 @@ export class TaskListComponent {
   ];
 
   searchTerm = signal("");
+  sortAsc = signal(true);
   //priority = signal("");
   //status = signal("");
 
   filteredTasks = computed(() => {
     const search = this.searchTerm().toLowerCase();
+    const direction = this.sortAsc() ? 1 : -1;
 
-    return this.tasks.filter((task) => {
-      const matchesSearch =
-        !search || task.title.toLowerCase().includes(search);
-      const matchesFilters = this.activeFilters().every(
-        (f) => task[f.field] === f.value,
-      );
-      return matchesSearch && matchesFilters;
-    });
+    return [...this.tasks]
+      .filter((task) => {
+        const matchesSearch =
+          !search || task.title.toLowerCase().includes(search);
+        const matchesFilters = this.activeFilters().every(
+          (f) => task[f.field] === f.value,
+        );
+        return matchesSearch && matchesFilters;
+      })
+      .sort((a, b) => (a.dueDate.getTime() - b.dueDate.getTime()) * direction);
   });
 
   // onPriorityChange(event: Event) {
@@ -117,5 +121,9 @@ export class TaskListComponent {
       (this.activeFilters().find((f) => f.field === field)?.value as string) ??
       ""
     );
+  }
+
+  sortDueDate() {
+    this.sortAsc.update((asc) => !asc);
   }
 }
