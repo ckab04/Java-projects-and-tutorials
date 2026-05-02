@@ -1,12 +1,20 @@
-import { Component, computed, signal } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  signal,
+} from "@angular/core";
 import { Task } from "../../models/task.interface";
 import { Filter } from "../../models/filter.interface";
+import { HighLightPipe } from "../../pipes/highlight.pipe";
+import { HighlightOverdueDirective } from "../../directives/highlitoverdue.directive";
 
 @Component({
   selector: "app-task-list",
-  imports: [],
+  imports: [HighLightPipe, HighlightOverdueDirective],
   templateUrl: "./task-list.component.html",
   styleUrl: "./task-list.component.css",
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskListComponent {
   tasks: Task[] = [
@@ -125,5 +133,12 @@ export class TaskListComponent {
 
   sortDueDate() {
     this.sortAsc.update((asc) => !asc);
+  }
+
+  checkCount = 0;
+
+  ngDoCheck() {
+    this.checkCount++;
+    console.log("Component checked: ", this.checkCount);
   }
 }
