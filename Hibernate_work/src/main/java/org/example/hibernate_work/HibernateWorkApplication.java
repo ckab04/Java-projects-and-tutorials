@@ -31,6 +31,66 @@ public class HibernateWorkApplication {
 
     }
 
+    private void dirtyChecking(Session session){
+        //Employee emp = em.getReference(Employee.class, 2L);
+
+        // Dirty checking
+//            Employee emp = session.getReference(Employee.class, 2L);
+//            System.out.println("BEFORE MODIFICATION ");
+//            System.out.println(emp.getName() + " " + emp.getEmail());
+//
+//
+//            emp.setName("Josephine Tudilu");
+//            emp.setEmail("josephine@gmail.com");
+        // end dirty checking
+
+        // First, let's see what's ACTUALLY in the database
+        Tuple beforeAnyChanges = session
+                .createNativeQuery("SELECT * FROM all_employees.employee_info WHERE id = 1", Tuple.class)
+                .getSingleResult();
+
+        System.out.println("=== DATABASE VALUES BEFORE ANY CHANGES ===");
+        System.out.println("DB Name: " + beforeAnyChanges.get("name"));
+        System.out.println("DB Email: " + beforeAnyChanges.get("email"));
+        String originalDbName = (String) beforeAnyChanges.get("name");
+        String originalDbEmail = (String) beforeAnyChanges.get("email");
+
+
+        // FLUSH MODES
+        Employee emp1 = session.getReference(Employee.class, 1L);
+        emp1.setEmail("jeanson@gmail.com");
+        emp1.setName("JEANSON");
+        System.out.println("Entity modified - no flush yet");
+        System.out.println(emp1.getName() + " " + emp1.getEmail());
+
+
+        // USING JPQL
+        List<Employee> employees = session
+                .createQuery("select e from Employee e", Employee.class)
+                .getResultList();
+
+        System.out.println("Result before flushing the data USING JPQL");
+        employees.forEach(System.out::println);
+
+        System.out.println("Result before flushing the data USING NATIVE QUERY");
+
+        System.out.println("\n=== TUPLE RESULT (READS FROM DATABASE) ===");
+        Tuple viaNative = session
+                .createNativeQuery("SELECT * FROM all_employees.employee_info WHERE id = 1", Tuple.class)
+                .getSingleResult();
+
+        System.out.println(viaNative.get("name") + " " + viaNative.get("email"));
+        System.out.println("Explicit flush called");
+
+        session.flush();
+
+
+        System.out.println("BEFORE COMMIT : " + emp1.getName() + " " + emp1.getEmail());
+        System.out.println("4. Transaction will commit - flush happens here");
+    }
+
+
+
     @Bean
     public CommandLineRunner demo(EmployeeRepository repo) {
 
@@ -47,61 +107,7 @@ public class HibernateWorkApplication {
             EntityTransaction tx = session.beginTransaction();
             //tx.begin();
 
-            //Employee emp = em.getReference(Employee.class, 2L);
 
-            // Dirty checking
-//            Employee emp = session.getReference(Employee.class, 2L);
-//            System.out.println("BEFORE MODIFICATION ");
-//            System.out.println(emp.getName() + " " + emp.getEmail());
-//
-//
-//            emp.setName("Josephine Tudilu");
-//            emp.setEmail("josephine@gmail.com");
-            // end dirty checking
-
-            // First, let's see what's ACTUALLY in the database
-            Tuple beforeAnyChanges = session
-                    .createNativeQuery("SELECT * FROM all_employees.employee_info WHERE id = 1", Tuple.class)
-                    .getSingleResult();
-
-            System.out.println("=== DATABASE VALUES BEFORE ANY CHANGES ===");
-            System.out.println("DB Name: " + beforeAnyChanges.get("name"));
-            System.out.println("DB Email: " + beforeAnyChanges.get("email"));
-            String originalDbName = (String) beforeAnyChanges.get("name");
-            String originalDbEmail = (String) beforeAnyChanges.get("email");
-
-
-            // FLUSH MODES
-            Employee emp1 = session.getReference(Employee.class, 1L);
-            emp1.setEmail("jeanson@gmail.com");
-            emp1.setName("JEANSON");
-            System.out.println("Entity modified - no flush yet");
-            System.out.println(emp1.getName() + " " + emp1.getEmail());
-
-
-            // USING JPQL
-            List<Employee> employees = session
-                    .createQuery("select e from Employee e", Employee.class)
-                    .getResultList();
-
-            System.out.println("Result before flushing the data USING JPQL");
-            employees.forEach(System.out::println);
-
-            System.out.println("Result before flushing the data USING NATIVE QUERY");
-
-            System.out.println("\n=== TUPLE RESULT (READS FROM DATABASE) ===");
-            Tuple viaNative = session
-                    .createNativeQuery("SELECT * FROM all_employees.employee_info WHERE id = 1", Tuple.class)
-                    .getSingleResult();
-
-            System.out.println(viaNative.get("name") + " " + viaNative.get("email"));
-            System.out.println("Explicit flush called");
-
-            session.flush();
-
-
-            System.out.println("BEFORE COMMIT : " + emp1.getName() + " " + emp1.getEmail());
-            System.out.println("4. Transaction will commit - flush happens here");
             tx.commit();
             em.close();
 
