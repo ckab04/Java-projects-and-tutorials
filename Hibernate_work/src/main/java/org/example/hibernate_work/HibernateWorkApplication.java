@@ -90,6 +90,41 @@ public class HibernateWorkApplication {
     }
 
 
+    private void detachEntity(Session session){
+        Employee emp1 = session.getReference(Employee.class, 1L);
+        System.out.println("1. Entity loaded (MANAGED)");
+        System.out.println("   Name: " + emp1.getName());
+        System.out.println("   Email: " + emp1.getEmail());
+        System.out.println("   Is managed? " + session.contains(emp1));
+
+        // STEP 2: DETACH the entity
+        session.detach(emp1);
+        System.out.println("\n2. Entity DETACHED from persistence context");
+        System.out.println("   Is managed? " + session.contains(emp1)); // false
+
+        // STEP 3: Modify while detached (NO automatic DB update)
+        emp1.setName("MODIFIED WHILE DETACHED");
+        emp1.setEmail("detached@example.com");
+        System.out.println("\n3. Entity MODIFIED while detached");
+        System.out.println("   New Name: " + emp1.getName());
+        System.out.println("   New Email: " + emp1.getEmail());
+        System.out.println("   (No UPDATE sent to database yet)");
+
+        // STEP 4: MERGE back to persistence context
+        Employee merged = session.merge(emp1);
+        System.out.println("\n4. Entity MERGED back to persistence context");
+        System.out.println("   Merged instance name: " + merged.getName());
+        System.out.println("   Original instance name: " + emp1.getName());
+        System.out.println("   Same object? " + (emp1 == merged)); // false
+        System.out.println("   Is merged managed? " + session.contains(merged)); // true
+
+        // STEP 5: Changes are now pending flush
+        System.out.println("\n5. Changes will be flushed at transaction commit");
+        System.out.println("   (UPDATE SQL will be executed automatically)");
+
+    }
+
+
 
     @Bean
     public CommandLineRunner demo(EmployeeRepository repo) {
@@ -107,6 +142,7 @@ public class HibernateWorkApplication {
             EntityTransaction tx = session.beginTransaction();
             //tx.begin();
 
+            detachEntity(session);
 
             tx.commit();
             em.close();
