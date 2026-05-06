@@ -100,7 +100,12 @@
       <tbody class="divide-y divide-gray-50">
         <!-- Row 1 -->
         @for(task  of filteredTasks(); track task.id ){
-          <tr class="hover:bg-gray-50 transition-colors">
+          <tr app-task-card [task] = "task"
+            class="hover:bg-gray-50 transition-colors"
+            [searchTerm] = "searchTerm()"
+            (taskCompletion) = "completeTask($event)"
+          ></tr>
+          <!-- <tr class="hover:bg-gray-50 transition-colors">
             <td class="px-6 py-3.5">
               <input type="checkbox" class="w-4 h-4 rounded accent-indigo-600" />
             </td>
@@ -135,7 +140,7 @@
                 </button>
               </div>
             </td>
-          </tr>
+          </tr> -->
         }
 
         <!-- Row 2 (overdue)

@@ -8,16 +8,17 @@ import { Task } from "../../models/task.interface";
 import { Filter } from "../../models/filter.interface";
 import { HighLightPipe } from "../../pipes/highlight.pipe";
 import { HighlightOverdueDirective } from "../../directives/highlitoverdue.directive";
+import { TaskCardComponent } from "../task-card/task-card.component";
 
 @Component({
   selector: "app-task-list",
-  imports: [HighLightPipe, HighlightOverdueDirective],
+  imports: [TaskCardComponent],
   templateUrl: "./task-list.component.html",
   styleUrl: "./task-list.component.css",
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskListComponent {
-  tasks: Task[] = [
+  tasks = signal<Task[]>([
     {
       id: 1,
       title: "Design landing page",
@@ -77,10 +78,12 @@ export class TaskListComponent {
         { label: "Configure staging deploy", done: true },
       ],
     },
-  ];
+  ]);
 
   searchTerm = signal("");
   sortAsc = signal(true);
+  taskToComplete = signal<Task>({} as Task);
+
   //priority = signal("");
   //status = signal("");
 
@@ -88,7 +91,7 @@ export class TaskListComponent {
     const search = this.searchTerm().toLowerCase();
     const direction = this.sortAsc() ? 1 : -1;
 
-    return [...this.tasks]
+    return [...this.tasks()]
       .filter((task) => {
         const matchesSearch =
           !search || task.title.toLowerCase().includes(search);
@@ -140,5 +143,9 @@ export class TaskListComponent {
   ngDoCheck() {
     this.checkCount++;
     console.log("Component checked: ", this.checkCount);
+  }
+
+  completeTask(task: Task) {
+    this.tasks.update((tasks) => tasks.filter((t) => t.id != task.id));
   }
 }
