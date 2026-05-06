@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   signal,
 } from "@angular/core";
 import { Task } from "../../models/task.interface";
@@ -9,6 +10,7 @@ import { Filter } from "../../models/filter.interface";
 import { HighLightPipe } from "../../pipes/highlight.pipe";
 import { HighlightOverdueDirective } from "../../directives/highlitoverdue.directive";
 import { TaskCardComponent } from "../task-card/task-card.component";
+import { TaskStateService } from "../../services/task-state.service";
 
 @Component({
   selector: "app-task-list",
@@ -18,71 +20,10 @@ import { TaskCardComponent } from "../task-card/task-card.component";
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskListComponent {
-  tasks = signal<Task[]>([
-    {
-      id: 1,
-      title: "Design landing page",
-      description: "Hero section, features, pricing, and footer",
-      priority: "high",
-      status: "in-progress",
-      assignee: "Josh",
-      board: "Website redesign",
-      dueDate: new Date("2026-04-30"),
-      subtasks: [
-        { label: "Sketch wireframes", done: true },
-        { label: "Add pricing section", done: false },
-      ],
-    },
-    {
-      id: 2,
-      title: "Implement user authentication",
-      description: "JWT-based auth flow with refresh tokens",
-      priority: "high",
-      status: "todo",
-      assignee: "Ryan",
-      board: "Mobile App",
-      dueDate: new Date("2026-04-25"),
-      subtasks: [
-        {
-          label: "Set up JWT libray",
-          done: false,
-        },
-      ],
-    },
-    {
-      id: 3,
-      title: "Write API documentation",
-      description: "REST endpoints, auth headers, and error codes",
-      priority: "low",
-      status: "review",
-      assignee: "Maya",
-      board: "API Integration",
-      dueDate: new Date("2026-05-02"),
-      subtasks: [
-        { label: "Document auth endpoints", done: true },
-        { label: "Document task endpoints", done: true },
-        { label: "Add error code table", done: true },
-      ],
-    },
-    {
-      id: 4,
-      title: "Set up CI/CD pipeline",
-      description: "GitHub Actions with staging and production environments",
-      priority: "medium",
-      status: "done",
-      assignee: "Alex",
-      board: "API Integration",
-      dueDate: new Date("2026-04-28"),
-      subtasks: [
-        { label: "Write build workflow", done: true },
-        { label: "Configure staging deploy", done: true },
-      ],
-    },
-  ]);
+  private taskState = inject(TaskStateService);
 
   searchTerm = signal("");
   sortAsc = signal(true);
-  taskToComplete = signal<Task>({} as Task);
 
   //priority = signal("");
   //status = signal("");
@@ -91,7 +32,7 @@ export class TaskListComponent {
     const search = this.searchTerm().toLowerCase();
     const direction = this.sortAsc() ? 1 : -1;
 
-    return [...this.tasks()]
+    return [...this.taskState.tasks()]
       .filter((task) => {
         const matchesSearch =
           !search || task.title.toLowerCase().includes(search);
@@ -146,6 +87,7 @@ export class TaskListComponent {
   }
 
   completeTask(task: Task) {
-    this.tasks.update((tasks) => tasks.filter((t) => t.id != task.id));
+    //this.tasks.update((tasks) => tasks.filter((t) => t.id != task.id));
+    this.taskState.remove(task.id);
   }
 }
