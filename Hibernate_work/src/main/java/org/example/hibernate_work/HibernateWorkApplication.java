@@ -167,14 +167,17 @@ public class HibernateWorkApplication {
 
     public void deleteSomeData(Session session){
 
-        Employee emp = session.find(Employee.class, 303);
-//        String name = emp.getName();
-//        List<Department> dpts = emp.getDepartment();
-//        System.out.println("EMPLOYEE RETRIEVED INFO");
-//        System.out.println(name);
-//        dpts.forEach((dp) -> System.out.println(dp.getName()));
+        Employee emp = session.find(Employee.class, 203);
+        String name = emp.getName();
+        List<Department> dpts = emp.getDepartment();
+        System.out.println("EMPLOYEE RETRIEVED INFO");
+        System.out.println(name);
+        dpts.forEach((dp) -> System.out.println(dp.getName()));
 
-        session.remove(emp);
+        //session.remove(emp);
+        System.out.println("REMOVE A SINGLE DEPARTMENT");
+        Department dpt = dpts.getFirst();
+        dpt.getEmployee().removeDepartment(dpt);
 
     }
 
