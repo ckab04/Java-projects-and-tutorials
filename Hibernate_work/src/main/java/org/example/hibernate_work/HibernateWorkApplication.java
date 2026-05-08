@@ -10,12 +10,14 @@ import org.example.hibernate_work.entities.Address;
 import org.example.hibernate_work.entities.Department;
 import org.example.hibernate_work.entities.Employee;
 import org.example.hibernate_work.entities.Project;
+import org.example.hibernate_work.repository.EmpRepository;
 import org.example.hibernate_work.repository.EmployeeRepository;
 import org.hibernate.Session;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -182,8 +184,48 @@ public class HibernateWorkApplication {
     }
 
 
+
+    //@Transactional(readOnly = true)
+    public void findAllEmployees(EmpRepository empRepository){
+
+
+        List<Employee> employees = empRepository.findAllWithDepartments();
+        employees.forEach(emp -> {
+            System.out.println(emp.getName());
+            List<Department> dpts = emp.getDepartment();
+            System.out.println("LIST OF ALL THE DEPARTMENTS");
+            dpts.forEach((d) -> System.out.println(d.getName()));
+        });
+    }
+
+    public void saveEmployees(EmpRepository empRepository){
+       Employee emp = new Employee("Christian", "Coleman", "cc@gmail.com") ;
+
+       Address address = new Address("123, Church Street", "Mexico");
+       emp.setAddress(address);
+
+       Department department1 = new Department("CHOIR");
+       Department department2 = new Department("POLE SOCIAL");
+
+       Project pj1 = new Project("Build a house");
+        Project pj2 = new Project("Find a church");
+        Project pj3 = new Project("Get a property");
+        Project pj4 = new Project("Buy a laptop");
+
+        department1.addProject(pj1);
+        department1.addProject(pj2);
+        department2.addProject(pj3);
+        department2.addProject(pj4);
+
+        emp.addDepartment(department1);
+        emp.addDepartment(department2);
+        empRepository.save(emp);
+
+    }
+
+
     @Bean
-    public CommandLineRunner demo(EmployeeRepository repo) {
+    public CommandLineRunner demo(EmployeeRepository repo, EmpRepository empRepository) {
 
         return (args) -> {
 //            repo.createEmployee(
@@ -200,7 +242,9 @@ public class HibernateWorkApplication {
 
             //detachEntity(session);
             //addMapping(session);
-            deleteSomeData(session);
+            //deleteSomeData(session);
+            //findAllEmployees(empRepository);
+            saveEmployees(empRepository);
 
             tx.commit();
             em.close();
