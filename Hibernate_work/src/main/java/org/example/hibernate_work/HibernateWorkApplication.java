@@ -6,7 +6,10 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Tuple;
 import jakarta.transaction.Transaction;
 import org.example.hibernate_work.config.DatabaseConfig;
+import org.example.hibernate_work.entities.Address;
+import org.example.hibernate_work.entities.Department;
 import org.example.hibernate_work.entities.Employee;
+import org.example.hibernate_work.entities.Project;
 import org.example.hibernate_work.repository.EmployeeRepository;
 import org.hibernate.Session;
 import org.springframework.boot.CommandLineRunner;
@@ -124,6 +127,56 @@ public class HibernateWorkApplication {
 
     }
 
+    public void addMapping(Session session){
+
+        Project p1 = new Project("CONSTRUCTION");
+        Project p2 = new Project("ROUTES");
+        Project p3 = new Project("ELECTIONS");
+        Department d1 = new Department("CIVIL");
+        Department d2 = new Department("ARCHITECTURE");
+        Department d3 = new Department("CENI");
+        //Department d4 = new Department("MARKET EVALUATION");
+
+        d1.addProject(p1);
+        d1.addProject(p2);
+        d2.addProject(p1);
+        d2.addProject(p2);
+        d2.addProject(p3);
+
+
+        Employee emp1 = new Employee("Jane", "July", "janejuly@gmail.com");
+        Employee emp2 = new Employee("Harold", "Grealish", "harold@gmail.com");
+        Employee emp3 = new Employee("Jack", "Jacobs", "jack@gmail.com");
+
+        emp1.addDepartment(d1);
+        emp1.addDepartment(d2);
+        emp2.addDepartment(d3);
+        emp2.addDepartment(d2);
+        emp3.addDepartment(d1);
+
+        emp1.setAddress(new Address("123 Main St", "France"));
+        emp2.setAddress(new Address("124 Main St", "France"));
+        emp3.setAddress(new Address("128 Main St", "France"));
+
+
+        session.persist(emp1);
+        session.persist(emp2);
+        session.persist(emp3);
+
+    }
+
+    public void deleteSomeData(Session session){
+
+        Employee emp = session.find(Employee.class, 303);
+//        String name = emp.getName();
+//        List<Department> dpts = emp.getDepartment();
+//        System.out.println("EMPLOYEE RETRIEVED INFO");
+//        System.out.println(name);
+//        dpts.forEach((dp) -> System.out.println(dp.getName()));
+
+        session.remove(emp);
+
+    }
 
 
     @Bean
@@ -142,7 +195,9 @@ public class HibernateWorkApplication {
             EntityTransaction tx = session.beginTransaction();
             //tx.begin();
 
-            detachEntity(session);
+            //detachEntity(session);
+            //addMapping(session);
+            deleteSomeData(session);
 
             tx.commit();
             em.close();

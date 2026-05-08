@@ -5,12 +5,16 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "employee_info", schema = "all_employees")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString(exclude = "department")
 public class Employee {
 
     @Id
@@ -26,10 +30,17 @@ public class Employee {
     @Column(name="email")
     private String email;
 
-    @Column(name="department")
-    private String department;
+    @Embedded
+    private Address address;
+
+    //@Column(name="department")
+    //private String department;
 
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Department> department;
+
 
 
 
@@ -38,12 +49,22 @@ public class Employee {
         createdAt= LocalDateTime.now();
     }
 
-    public Employee(String name, String lastname, String email, String department) {
+    public Employee(String name, String lastname, String email) {
         this.name = name;
         this.lastname = lastname;
         this.email = email;
-        this.department = department;
+        this.department = new ArrayList<>();
         // createdAt will be set by @PrePersist
+    }
+
+    public void addDepartment(Department dpt){
+        this.department.add(dpt);
+        dpt.setEmployee(this);
+    }
+
+    public void removeDepartment(Department dpt){
+        this.department.remove(dpt);
+        dpt.setEmployee(null);
     }
 
 }
