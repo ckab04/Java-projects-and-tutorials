@@ -6,12 +6,11 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Tuple;
 import jakarta.transaction.Transaction;
 import org.example.hibernate_work.config.DatabaseConfig;
-import org.example.hibernate_work.entities.Address;
-import org.example.hibernate_work.entities.Department;
-import org.example.hibernate_work.entities.Employee;
-import org.example.hibernate_work.entities.Project;
+import org.example.hibernate_work.entities.*;
+import org.example.hibernate_work.enums.PaymentStatus;
 import org.example.hibernate_work.repository.EmpRepository;
 import org.example.hibernate_work.repository.EmployeeRepository;
+import org.example.hibernate_work.repository.PaymentRepository;
 import org.hibernate.Session;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -19,6 +18,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -224,8 +224,28 @@ public class HibernateWorkApplication {
     }
 
 
+
+    public void addPaymentMethods(PaymentRepository paymentRepository){
+        CardPayment card = new CardPayment(
+                "133464", "29/29/2029", new BigDecimal("300"), "USD",
+
+                PaymentStatus.PENDING, "Means of payment");
+
+        MobileMoneyPayment mmp = new MobileMoneyPayment("06133464", "Airtel Money", new BigDecimal("300"), "USD",
+
+                PaymentStatus.PENDING, "Mobile money payment");
+
+        BankTransferPayment bTransfer = new BankTransferPayment ("908706133464", "AXA", new BigDecimal("300"), "USD",
+
+                PaymentStatus.PENDING, "Bank Transfer");
+
+        paymentRepository.save(mmp);
+        paymentRepository.save(bTransfer);
+    }
+
+
     @Bean
-    public CommandLineRunner demo(EmployeeRepository repo, EmpRepository empRepository) {
+    public CommandLineRunner demo(EmpRepository empRepository, PaymentRepository paymentRepository) {
 
         return (args) -> {
 //            repo.createEmployee(
@@ -244,8 +264,9 @@ public class HibernateWorkApplication {
             //addMapping(session);
             //deleteSomeData(session);
             //findAllEmployees(empRepository);
-            saveEmployees(empRepository);
-
+            //saveEmployees(empRepository);
+            System.out.println("Add a means of payment");
+            addPaymentMethods(paymentRepository);
             tx.commit();
             em.close();
 
