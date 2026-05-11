@@ -19,8 +19,8 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 @Setter
 @Getter
-@Table(name = "card_payment_v2")
-@PrimaryKeyJoinColumn(name = "card_id")
+@Table(name = "card_payment_v3")
+//@PrimaryKeyJoinColumn(name = "card_id")
 public class CardPayment extends Payment{
     private String cardNumber;
     private String expiryDate;

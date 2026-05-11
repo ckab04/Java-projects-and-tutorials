@@ -14,8 +14,8 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 @Setter
 @Getter
-@Table(name = "bank_transfer_payment_v2")
-@PrimaryKeyJoinColumn(name = "bank_transfer_id")
+@Table(name = "bank_transfer_payment_v3")
+//@PrimaryKeyJoinColumn(name = "bank_transfer_id")
 public class BankTransferPayment extends Payment {
 
     private String iban;

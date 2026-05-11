@@ -17,8 +17,8 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 @Setter
 @Getter
-@Table(name = "mobile_money_payment_v2")
-@PrimaryKeyJoinColumn(name = "mobile_money_id")
+@Table(name = "mobile_money_payment_v3")
+//@PrimaryKeyJoinColumn(name = "mobile_money_id")
 public class MobileMoneyPayment extends Payment {
 
     private String phoneNumber;
