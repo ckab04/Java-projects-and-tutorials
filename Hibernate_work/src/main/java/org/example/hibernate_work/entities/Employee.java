@@ -6,7 +6,9 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "employee_info", schema = "all_employees")
@@ -45,6 +47,12 @@ public class Employee {
     )
     private List<Department> department;
 
+//    @OneToMany(mappedBy = "employee",
+//            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+//            fetch = FetchType.LAZY,
+//            orphanRemoval = true
+//    )
+//    private Set<Payment> payment = new HashSet<>();
 
 
 

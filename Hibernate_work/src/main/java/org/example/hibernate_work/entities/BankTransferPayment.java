@@ -1,9 +1,7 @@
 package org.example.hibernate_work.entities;
 
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -12,10 +10,12 @@ import org.example.hibernate_work.enums.PaymentStatus;
 import java.math.BigDecimal;
 
 @Entity
-@DiscriminatorValue("BANK_TRANSFER")
+//@DiscriminatorValue("BANK_TRANSFER")
 @RequiredArgsConstructor
 @Setter
 @Getter
+@Table(name = "bank_transfer_payment_v2")
+@PrimaryKeyJoinColumn(name = "bank_transfer_id")
 public class BankTransferPayment extends Payment {
 
     private String iban;

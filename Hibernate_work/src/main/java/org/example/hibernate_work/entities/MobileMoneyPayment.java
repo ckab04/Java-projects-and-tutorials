@@ -3,6 +3,8 @@ package org.example.hibernate_work.entities;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -11,10 +13,12 @@ import org.example.hibernate_work.enums.PaymentStatus;
 import java.math.BigDecimal;
 
 @Entity
-@DiscriminatorValue("MOBILE_MONEY")
+//@DiscriminatorValue("MOBILE_MONEY")
 @RequiredArgsConstructor
 @Setter
 @Getter
+@Table(name = "mobile_money_payment_v2")
+@PrimaryKeyJoinColumn(name = "mobile_money_id")
 public class MobileMoneyPayment extends Payment {
 
     private String phoneNumber;

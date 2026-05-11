@@ -239,6 +239,7 @@ public class HibernateWorkApplication {
 
                 PaymentStatus.PENDING, "Bank Transfer");
 
+        paymentRepository.save(card);
         paymentRepository.save(mmp);
         paymentRepository.save(bTransfer);
     }

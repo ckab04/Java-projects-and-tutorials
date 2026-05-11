@@ -10,9 +10,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "payment_type", discriminatorType = DiscriminatorType.STRING, length = 20)
+@Inheritance(strategy = InheritanceType.JOINED)
+//@DiscriminatorColumn(name = "payment_type", discriminatorType = DiscriminatorType.STRING, length = 20)
 //@NoArgsConstructor
+@Table(name = "payment_v2")
 @RequiredArgsConstructor
 public abstract class Payment {
 
