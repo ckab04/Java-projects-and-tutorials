@@ -7,8 +7,7 @@ import {
 } from "@angular/core";
 import { Task } from "../../models/task.interface";
 import { Filter } from "../../models/filter.interface";
-import { HighLightPipe } from "../../pipes/highlight.pipe";
-import { HighlightOverdueDirective } from "../../directives/highlitoverdue.directive";
+
 import { TaskCardComponent } from "../task-card/task-card.component";
 import { TaskStateService } from "../../services/task-state.service";
 
